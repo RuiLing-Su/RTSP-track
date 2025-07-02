@@ -50,7 +50,7 @@
 
 ```bash
 # 克隆项目
-git clone <repository-url>
+git clone https://github.com/RuiLing-Su/RTSP-track.git
 cd h-d18-detection
 
 # 创建虚拟环境
@@ -58,9 +58,6 @@ python -m venv venv
 source venv/bin/activate  # Linux/Mac
 # 或
 venv\Scripts\activate     # Windows
-
-# 安装依赖
-pip install -r requirements.txt
 ```
 
 ### 2. 依赖包安装
