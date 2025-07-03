@@ -39,7 +39,7 @@
 
 ### 软件依赖
 - Python 3.8+
-- OpenCV 4.5+
+- OpenCV 5.0
 - FFmpeg（支持RTMP推流）
 - CUDA（可选，GPU加速）
 
@@ -89,30 +89,9 @@ sudo yum install ffmpeg
 # 下载FFmpeg并添加到PATH环境变量
 ```
 
-### 5. RTMP服务器配置
+### 5. SRS服务器配置
 
-项目默认推流到本地RTMP服务器，需要配置nginx-rtmp或使用其他RTMP服务器：
-
-```nginx
-# nginx.conf 示例配置
-rtmp {
-    server {
-        listen 1935;
-        chunk_size 4096;
-        
-        application live {
-            live on;
-            record off;
-            
-            # 允许推流
-            allow publish all;
-            
-            # HTTP-FLV配置
-            play http://localhost:18080/live/;
-        }
-    }
-}
-```
+项目默认推流到本地SRS服务器
 
 ### 6. 启动服务
 
@@ -131,7 +110,7 @@ python main.py
 ```json
 {
     "userId": 1,
-    "channel": 1
+    "channel": 1801
 }
 ```
 
@@ -142,7 +121,7 @@ python main.py
     "code": 200,
     "data": {
         "code": "h264",
-        "flvUrl": "http://222.186.32.142:18080/live/rtsp_1.flv",
+        "flvUrl": "http://222.186.32.142:18080/live/rtsp_1801.flv",
         "message": "新通道推流已启动"
     }
 }
@@ -264,14 +243,7 @@ gpu_cmd = [
 
 ### 日志输出
 
-系统提供详细的控制台日志输出：
-
-```
-通道 1 连接RTSP: rtsp://admin:qaz12345@112.28.137.127:8554/Streaming/Channels/1801
-通道 1 RTSP连接成功
-通道 1 使用GPU加速FFmpeg
-通道 1 检测启动成功
-```
+系统提供详细的控制台日志
 
 ## 🛠️ 故障排除
 
@@ -311,21 +283,6 @@ gpu_cmd = [
 3. **数据加密**: RTSP和API通信加密
 4. **日志审计**: 记录关键操作日志
 
-## 📈 扩展性
-
-### 水平扩展
-
-- 支持多服务器部署
-- 负载均衡配置
-- 分布式处理
-
-### 功能扩展
-
-- 支持更多检测对象
-- 添加数据库存储
-- 集成报警系统
-- Web管理界面
-
 ## 📞 支持与维护
 
 ### 系统要求检查
@@ -338,12 +295,5 @@ gpu_cmd = [
 - [ ] RTMP服务器已启动
 - [ ] 网络连接正常
 
-### 联系方式
-
-如有问题或建议，请联系技术支持团队。
 
 ---
-
-**版本**: 1.0.0  
-**最后更新**: 2024年1月  
-**许可证**: 请联系相关方获取许可信息
