@@ -12,23 +12,6 @@
 - **视频推流**: 支持RTMP推流和HTTP视频流
 - **使用统计**: 记录停机坪使用时间统计
 
-## 🏗️ 系统架构
-
-```
-├── 视频输入 (RTSP)
-├── YOLO检测模型
-│   ├── 飞机检测 (H-D18plane_vest.pt)
-│   └── 人员检测 (person.pt)
-├── 异步处理引擎
-│   ├── 帧捕获循环
-│   ├── 帧处理循环
-│   └── 健康监控
-├── 视频输出
-│   ├── RTMP推流
-│   └── HTTP视频流
-└── REST API接口
-```
-
 ## 📋 系统要求
 
 ### 硬件要求
@@ -61,33 +44,9 @@ venv\Scripts\activate     # Windows
 
 ### 2. 依赖包安装
 
-```bash
-pip install fastapi uvicorn
-pip install opencv-python
-pip install ultralytics
-pip install numpy
-pip install pydantic
-```
-
 ### 3. 模型文件准备
 
-确保以下模型文件存在于项目根目录：
-- `H-D18plane_vest.pt` - 飞机和安全背心检测模型
-- `person.pt` - 人员检测模型
-
 ### 4. FFmpeg配置
-
-安装FFmpeg并确保可执行：
-```bash
-# Ubuntu/Debian
-sudo apt install ffmpeg
-
-# CentOS/RHEL
-sudo yum install ffmpeg
-
-# Windows
-# 下载FFmpeg并添加到PATH环境变量
-```
 
 ### 5. SRS服务器配置
 
@@ -100,97 +59,6 @@ python main.py
 ```
 
 服务将在 `http://localhost:9952` 启动
-
-## 📡 API接口
-
-### 启动检测
-
-**POST** `/start_detection`
-
-```json
-{
-    "userId": 1,
-    "channel": 1801
-}
-```
-
-**响应:**
-```json
-{
-    "msg": "推流已启动",
-    "code": 200,
-    "data": {
-        "code": "h264",
-        "flvUrl": "http://222.186.32.142:18080/live/rtsp_1801.flv",
-        "message": "新通道推流已启动"
-    }
-}
-```
-
-### 停止检测
-
-**POST** `/stop_detection`
-
-```json
-{
-    "userId": 1,
-    "channel": 1
-}
-```
-
-### 获取检测结果
-
-**GET** `/detection_result/{channel}`
-
-**响应:**
-```json
-{
-    "timestamp": "2024-01-01T12:00:00",
-    "status_id": 1,
-    "helipad_status": "使用中",
-    "aircraft_count": 1,
-    "aircraft_total_time": 120.5,
-    "authorized_personnel": 2,
-    "unauthorized_personnel": 0,
-    "warning_active": false,
-    "frame_base64": "base64编码的图片数据"
-}
-```
-
-### 获取检测状态
-
-**GET** `/detection_status/{channel}`
-
-### 视频流
-
-**GET** `/video_stream/{channel}`
-
-返回MJPEG视频流，可直接在浏览器中查看
-
-### 使用统计
-
-**GET** `/usage_statistics/{channel}`
-
-## ⚙️ 配置说明
-
-### 通道配置
-
-系统支持多个通道，每个通道对应一个RTSP视频源：
-
-```python
-configs = {
-    1: {
-        "width": 1920, 
-        "height": 1080,
-        "rtsp_url": "rtsp://admin:password@192.168.1.100:554/stream1"
-    },
-    2: {
-        "width": 640, 
-        "height": 360,
-        "rtsp_url": "rtsp://admin:password@192.168.1.100:554/stream2"
-    }
-}
-```
 
 ### 检测区域配置
 
@@ -224,76 +92,5 @@ gpu_cmd = [
 2. **向量化计算**: 提高检测效率
 3. **异步处理**: 分离帧捕获和处理
 4. **线程池**: 避免阻塞事件循环
-
-### 错误处理
-
-- 自动RTSP重连
-- FFmpeg进程监控
-- 健康状态检查
-- 优雅的资源清理
-
-## 📊 监控和日志
-
-### 系统监控
-
-- 帧率监控
-- 连接状态检查
-- 资源使用统计
-- 错误计数
-
-### 日志输出
-
-系统提供详细的控制台日志
-
-## 🛠️ 故障排除
-
-### 常见问题
-
-1. **RTSP连接失败**
-   - 检查网络连接
-   - 验证RTSP URL和凭据
-   - 确认摄像头支持的编码格式
-
-2. **FFmpeg启动失败**
-   - 检查FFmpeg安装
-   - 验证RTMP服务器配置
-   - 检查端口占用情况
-
-3. **模型加载失败**
-   - 确认模型文件存在
-   - 检查模型文件完整性
-   - 验证YOLO版本兼容性
-
-4. **GPU加速不可用**
-   - 安装NVIDIA驱动
-   - 安装CUDA toolkit
-   - 检查FFmpeg NVENC支持
-
-### 性能调优
-
-1. **降低分辨率**: 使用640x360替代1920x1080
-2. **调整帧率**: 降低处理帧率减少CPU负载
-3. **优化检测参数**: 调整YOLO推理参数
-4. **内存管理**: 监控内存使用避免泄漏
-
-## 🔒 安全考虑
-
-1. **网络安全**: 使用VPN或专网部署
-2. **访问控制**: 实现用户认证和授权
-3. **数据加密**: RTSP和API通信加密
-4. **日志审计**: 记录关键操作日志
-
-## 📞 支持与维护
-
-### 系统要求检查
-
-运行前请确保：
-- [ ] Python 3.8+ 已安装
-- [ ] 所有依赖包已安装
-- [ ] 模型文件已准备
-- [ ] FFmpeg 已配置
-- [ ] RTMP服务器已启动
-- [ ] 网络连接正常
-
 
 ---
