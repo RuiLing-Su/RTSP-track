@@ -73,9 +73,9 @@ class AsyncChannelDetection:
         # 配置 - 使用字典简化
         self.configs = {
             1: {"width": 1920, "height": 1080,
-                "rtsp_url": "rtsp://admin:qaz12345@112.28.137.127:8554/Streaming/Channels/1801"},
+                "rtsp_url": "rtsp://your_username:your_password@123.123.123.123:8554/Streaming/Channels/1801"},
             2: {"width": 640, "height": 360,
-                "rtsp_url": "rtsp://admin:qaz12345@112.28.137.127:8554/Streaming/Channels/1802"}
+                "rtsp_url": "rtsp://your_username:your_password@123.123.123.123:8554/Streaming/Channels/1802"}
         }
 
         # 多边形点 - 预计算缩放
